@@ -4,6 +4,7 @@ import {StyleSheet, Text, View, Image} from "react-native";
 import Splash from "./screens/Splash";
 import ToDo from "./screens/ToDo";
 import Done from "./screens/Done";
+import Task from "./screens/Task";
 
 
 import { NavigationContainer } from "@react-navigation/native";
@@ -67,6 +68,10 @@ const App = () => {
         <RootStack.Screen 
           name="My Tasks"
           component={HomeTabs} //to implement funtion HomeTabs
+        />
+        <RootStack.Screen
+          name="Task"
+          component={Task}
         />
       </RootStack.Navigator>
     </NavigationContainer>
