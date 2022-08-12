@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setTaskId, setTasks } from '../redux/actions';
 
 import { useEffect } from 'react';
+import CheckBox from '@react-native-community/checkbox';
 
 export default function ToDo({navigation}) {
 
@@ -20,6 +21,20 @@ export default function ToDo({navigation}) {
     getTasks();
 
   }, []) //runs only once
+
+  const checkTask = (id, newValue) => {
+    const index = tasks.findIndex(task => task.ID === id);
+    if (index > -1){
+      let newTasks = [...tasks];
+      newTasks[index].done = newValue;
+      AsyncStorage.setItem("Tasks", JSON.stringify(newTasks))
+        .then(() => {
+          dispatch(setTasks(newTasks));
+          Alert.alert("Success!", "Task status has been updated");
+        })
+        .catch(error => console.log(error, "todo screen - task status update error"))
+    }
+  }
 
   const deleteTask = (id) => {
     const filteredTasks = tasks.filter(task => task.ID !== id);
@@ -54,6 +69,10 @@ export default function ToDo({navigation}) {
           }}
           style={styles.item}>
             <View style={styles.item_row}>
+              <CheckBox 
+                value={item.done} //keeps the checkbox status
+                onValueChange={(newValue) => checkTask(item.ID, newValue)} // function checkTask(arg1, arg2) to be implemented
+              />
               <View style={styles.item_body}>
                 <Text style={styles.title}>{item.title}</Text>
                  <Text style={styles.subtitle}>{item.description}</Text>

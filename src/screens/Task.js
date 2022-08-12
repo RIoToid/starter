@@ -2,6 +2,7 @@ import { Alert, StyleSheet, Text, View } from 'react-native';
 import React, {useState} from 'react';
 import { TextInput } from 'react-native-gesture-handler';
 import CustomButton from '../utils/CustomButton';
+import CheckBox from '@react-native-community/checkbox';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { setTasks } from '../redux/actions';
@@ -11,6 +12,7 @@ import { useEffect } from 'react';
 export default function Task({navigation}) {
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
+    const [done, setDone] = useState(false);
 
     const {tasks, taskID} = useSelector(state => state.taskReducer);
     const dispatch = useDispatch();
@@ -24,6 +26,7 @@ export default function Task({navigation}) {
       if(Task){
         setTitle(Task.title);
         setDescription(Task.description);
+        setDone(Task.done);
       }
     }
 
@@ -37,6 +40,7 @@ export default function Task({navigation}) {
                     ID: taskID,
                     title: title,
                     description: description,
+                    done: done, //keeps the box checked 
                 };
                 const index = tasks.findIndex(task => task.ID ===taskID);
                 let newTasks = [];
@@ -76,6 +80,13 @@ export default function Task({navigation}) {
         multiline
         onChangeText={(value) => {setDescription(value)}}
       />
+      <View style={styles.checkbox_row}>
+      <CheckBox 
+        value={done} //controlled by state
+        onValueChange={(newValue) => setDone(newValue)}
+      />
+      <Text style={styles.checkbox_text}>Done</Text>
+      </View>
       <CustomButton 
         title="Save Task"
         color="#1eb900"
@@ -103,6 +114,13 @@ const styles = StyleSheet.create({
         textAlign: "left",
         fontSize: 15,
         paddingHorizontal: 10,
+    },
+    checkbox_row: {
+      flexDirection: "row",
+    },
+    checkbox_text: {
+      fontSize: 20,
+      marginLeft: 5,
     }
 
 
