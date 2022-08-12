@@ -1,12 +1,65 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { Alert, StyleSheet, Text, View } from 'react-native';
 import React, {useState} from 'react';
 import { TextInput } from 'react-native-gesture-handler';
 import CustomButton from '../utils/CustomButton';
 
-export default function Task() {
+import { useDispatch, useSelector } from 'react-redux';
+import { setTasks } from '../redux/actions';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useEffect } from 'react';
+
+export default function Task({navigation}) {
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
 
+    const {tasks, taskID} = useSelector(state => state.taskReducer);
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+      getTask(); // to be defined
+    }, [])
+
+    const getTask = () =>{
+      const Task = tasks.find(task => task.ID === taskID)
+      if(Task){
+        setTitle(Task.title);
+        setDescription(Task.description);
+      }
+    }
+
+    const setTask = () =>{
+        if (title.length == 0){
+            Alert.alert("Warning!", "Please write your task title.")
+        }
+        else{
+            try {
+                var task = {
+                    ID: taskID,
+                    title: title,
+                    description: description,
+                };
+                const index = tasks.findIndex(task => task.ID ===taskID);
+                let newTasks = [];
+                if (index > -1){
+                  newTasks = [...tasks];
+                  newTasks[index] = task;
+                }else {
+                   newTasks = [...tasks, task];
+                }
+                console.log(newTasks);
+                AsyncStorage.setItem("Tasks", JSON.stringify(newTasks))//key here is Tasks
+                     .then(()=>{
+                        dispatch(setTasks(newTasks));
+                         Alert.alert("Success!", "Task added successfully");
+                         navigation.goBack();
+                        })
+                     .catch(error => console.log(error, "exit code 1"))
+
+            }catch(error){
+                console.log(error, "exit code 2");
+            }
+        }
+    }
 
   return (
     <View style={styles.body}>
@@ -14,19 +67,20 @@ export default function Task() {
         value={title}
         style={styles.input}
         placeholder={"Title"}
-        onChange={(value) => setTitle(value)}
+        onChangeText={(value) => setTitle(value)}
       />
       <TextInput
         value={description} 
         style={styles.input}
         placeholder={"Description"}
         multiline
-        onChange={(value) => setDescription(value)}
+        onChangeText={(value) => {setDescription(value)}}
       />
       <CustomButton 
         title="Save Task"
         color="#1eb900"
         style={{width: "100%"}}
+        onPressFunction={setTask}
       />
     </View>
   )

@@ -1,12 +1,81 @@
 //using AsyncStorage for OFFLINE LOCAL STORAGE
 
-import { StyleSheet, Text, View, TouchableOpacity} from 'react-native'
-import React from 'react'
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+import { StyleSheet, Text, View, TouchableOpacity, FlatList, Image, Alert} from 'react-native';
+import React from 'react';
+
+
+import { useDispatch, useSelector } from 'react-redux';
+import { setTaskId, setTasks } from '../redux/actions';
+
+import { useEffect } from 'react';
 
 export default function ToDo({navigation}) {
+
+  const {tasks} = useSelector(state => state.taskReducer);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    getTasks();
+
+  }, []) //runs only once
+
+  const deleteTask = (id) => {
+    const filteredTasks = tasks.filter(task => task.ID !== id);
+    AsyncStorage.setItem("Tasks", JSON.stringify(filteredTasks))
+    .then(() =>{ 
+      dispatch(setTasks(filteredTasks));
+      Alert.alert("Success!", "Task removed successfully.")
+      console.log(tasks);
+    })
+    .catch(error => console.log(error, "ToDo screen, exit code 1"))
+  }
+
+  const getTasks = () => {
+    AsyncStorage.getItem("Tasks")
+    .then(tasks =>{
+      const parsedTasks = JSON.parse(tasks);
+      if (parsedTasks && typeof parsedTasks === "object"){
+        dispatch(setTasks(parsedTasks));
+      }
+    }).catch(error => console.log(error))
+  }
+
   return (
     <View style={styles.body}>
-     <TouchableOpacity style={styles.button} onPress={() => {navigation.navigate("Task")}}><Text style={styles.textbuttonAdd}>+</Text>
+      <FlatList 
+        data={tasks}
+        renderItem={({item}) => (
+          <TouchableOpacity 
+          onPress={() => { 
+            dispatch(setTaskId(item.ID));
+           navigation.navigate("Task");
+          }}
+          style={styles.item}>
+            <View style={styles.item_row}>
+              <View style={styles.item_body}>
+                <Text style={styles.title}>{item.title}</Text>
+                 <Text style={styles.subtitle}>{item.description}</Text>
+              </View>
+              <TouchableOpacity 
+                onPress={() => deleteTask(item.ID)}
+              >
+                <Image 
+                style={styles.image_trash_can}
+                source={require("../../assets/starter-trash_can.png")} />
+              </TouchableOpacity>
+            </View>
+          </TouchableOpacity>
+        )}
+        keyExtractor={(item, index) => index.toString()}
+      />
+      
+     <TouchableOpacity 
+      style={styles.button} 
+      onPress={() => {
+        dispatch(setTaskId(tasks.length +1));
+        navigation.navigate("Task")}}><Text style={styles.textbuttonAdd}>+</Text>
      </TouchableOpacity>
     </View>
   )
@@ -32,5 +101,35 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "white",
     fontSize: 25,
+  },
+  item_row: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  item_body: {
+    flex: 1,
+  },
+  item: {
+    justifyContent: "center",
+    marginHorizontal: 10,
+    marginVertical: 7,
+    paddingRight: 10,
+    backgroundColor: "white",
+    borderRadius: 10,
+    elevation: 5,
+  },
+  title: {
+    color: "black",
+    fontSize: 30,
+    margin: 5,
+  },
+  subtitle: {
+    color: "grey",
+    margin: 5,
+    fontSize: 20,
+  },
+  image_trash_can: {
+    height: 25,
+    width: 25,
   }
 })

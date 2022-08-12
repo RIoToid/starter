@@ -6,6 +6,9 @@ import ToDo from "./screens/ToDo";
 import Done from "./screens/Done";
 import Task from "./screens/Task";
 
+import {Provider} from "react-redux";
+import {Store} from "./redux/store";
+
 
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from '@react-navigation/stack';
@@ -56,6 +59,7 @@ const HomeTabs = () => {
 
 const App = () => {
   return (
+    <Provider store={Store} >
     <NavigationContainer>
       <RootStack.Navigator>
         <RootStack.Screen 
@@ -75,6 +79,7 @@ const App = () => {
         />
       </RootStack.Navigator>
     </NavigationContainer>
+    </Provider>
   );
 }
 
