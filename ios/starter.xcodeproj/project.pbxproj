@@ -41,6 +41,7 @@
 		5709B34CF0A7D63546082F79 /* Pods-starter.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-starter.release.xcconfig"; path = "Target Support Files/Pods-starter/Pods-starter.release.xcconfig"; sourceTree = "<group>"; };
 		5B7EB9410499542E8C5724F5 /* Pods-starter-starterTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-starter-starterTests.debug.xcconfig"; path = "Target Support Files/Pods-starter-starterTests/Pods-starter-starterTests.debug.xcconfig"; sourceTree = "<group>"; };
 		5DCACB8F33CDC322A6C60F78 /* libPods-starter.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-starter.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		6A7220F728ABE05B0009BC9C /* starter.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = starter.entitlements; path = starter/starter.entitlements; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = starter/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		89C6BE57DB24E9ADA2F236DE /* Pods-starter-starterTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-starter-starterTests.release.xcconfig"; path = "Target Support Files/Pods-starter-starterTests/Pods-starter-starterTests.release.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
@@ -86,6 +87,7 @@
 		13B07FAE1A68108700A75B9A /* starter */ = {
 			isa = PBXGroup;
 			children = (
+				6A7220F728ABE05B0009BC9C /* starter.entitlements */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.mm */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
@@ -485,6 +487,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = starter/starter.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = starter/Info.plist;
@@ -511,6 +514,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = starter/starter.entitlements;
 				CURRENT_PROJECT_VERSION = 1;
 				INFOPLIST_FILE = starter/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (

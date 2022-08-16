@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   View,
   Image,
+  Modal,
 } from 'react-native';
 import React, {useState} from 'react';
 import {TextInput} from 'react-native-gesture-handler';
@@ -21,6 +22,8 @@ export default function Task({navigation}) {
   const [description, setDescription] = useState('');
   const [done, setDone] = useState(false);
   const [color, setColor] = useState('white');
+  const [showModalBell, setShowModalBell] = useState(false);
+  const [alarm, setAlarm] = useState('1');
 
   const {tasks, taskID} = useSelector(state => state.taskReducer);
   const dispatch = useDispatch();
@@ -72,9 +75,53 @@ export default function Task({navigation}) {
       }
     }
   };
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //////////////////
 
   return (
     <View style={styles.body}>
+      <Modal
+        visible={showModalBell} //controlled by the state
+        onRequestClose={() => setShowModalBell(false)}
+        transparent
+        animationType="slide">
+        <View style={styles.centered_view}>
+          <View style={styles.bell_modal}>
+            <View style={styles.bell_body}>
+              <Text>Remind me after</Text>
+              <TextInput
+                onChangeText={value => setAlarm(value)} //controlled by the state
+                keyboardType="numeric"
+                style={styles.bell_input}
+              />
+              <Text>minute(s)</Text>
+            </View>
+            <View style={styles.bell_row}>
+              <TouchableOpacity
+                style={styles.bell_button_cancel}
+                onPress={() => setShowModalBell(false)}>
+                <Text>Cancel</Text>
+              </TouchableOpacity>
+              <TouchableOpacity //</View>onPress={setTaskAlarm}
+                style={styles.bell_button_ok}>
+                <Text>Ok</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
       <TextInput
         value={title}
         style={styles.input}
@@ -130,6 +177,16 @@ export default function Task({navigation}) {
               source={require('../../assets/starter-check2-removebg-preview.png')}
             />
           )}
+        </TouchableOpacity>
+      </View>
+      <View style={styles.bell_view}>
+        <TouchableOpacity
+          onPress={() => setShowModalBell(true)}
+          style={styles.bell_button}>
+          <Image
+            style={styles.image_bell}
+            source={require('../../assets/starter-bell-removebg-preview.png')}
+          />
         </TouchableOpacity>
       </View>
       <View style={{flexDirection: 'row', alignItems: 'center'}}>
@@ -212,5 +269,69 @@ const styles = StyleSheet.create({
   image_check: {
     height: 20,
     width: 20,
+  },
+  bell_view: {
+    flexDirection: 'row',
+  },
+  bell_button: {
+    flex: 1,
+    height: 50,
+    backgroundColor: 'blue',
+    borderRadius: 10,
+    marginVertical: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  image_bell: {
+    height: 30,
+    width: 30,
+  },
+  centered_view: {
+    backgroundColor: '#00000099',
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  bell_modal: {
+    height: 200,
+    width: 300,
+    backgroundColor: 'white',
+    borderRadius: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  bell_body: {
+    flex: 3,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  bell_row: {
+    flexDirection: 'row',
+    flex: 1,
+  },
+  bell_input: {
+    width: 50,
+    height: 50,
+    borderColor: 'black',
+    borderWidth: 1,
+    margin: 10,
+    textAlign: 'center',
+    fontSize: 20,
+    borderRadius: 5,
+  },
+  bell_button_cancel: {
+    flex: 1,
+    borderTopWidth: 1,
+    borderColor: '#000000',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  bell_button_ok: {
+    flex: 1,
+    borderTopWidth: 1,
+    borderLeftWidth: 1,
+    borderColor: '#000000',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
