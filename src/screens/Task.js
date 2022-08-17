@@ -16,6 +16,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {setTasks} from '../redux/actions';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useEffect} from 'react';
+import PushNotification from 'react-native-push-notification';
 
 export default function Task({navigation}) {
   const [title, setTitle] = useState('');
@@ -75,6 +76,15 @@ export default function Task({navigation}) {
       }
     }
   };
+  const setTaskAlarm = () => {
+    PushNotification.localNotificationSchedule({
+      channelId: 'task-channel',
+      title: title,
+      message: description,
+      date: new Date(Date.now() + parseInt(alarm) * 60 * 1000),
+      allowWhileIdle: true,
+    });
+  };
   //
   //
   //
@@ -114,7 +124,11 @@ export default function Task({navigation}) {
                 onPress={() => setShowModalBell(false)}>
                 <Text>Cancel</Text>
               </TouchableOpacity>
-              <TouchableOpacity //</View>onPress={setTaskAlarm}
+              <TouchableOpacity
+                onPress={() => {
+                  setTaskAlarm();
+                  setShowModalBell(false);
+                }}
                 style={styles.bell_button_ok}>
                 <Text>Ok</Text>
               </TouchableOpacity>
@@ -181,7 +195,9 @@ export default function Task({navigation}) {
       </View>
       <View style={styles.bell_view}>
         <TouchableOpacity
-          onPress={() => setShowModalBell(true)}
+          onPress={() => {
+            setShowModalBell(true);
+          }}
           style={styles.bell_button}>
           <Image
             style={styles.image_bell}
